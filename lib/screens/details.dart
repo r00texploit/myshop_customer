@@ -232,8 +232,8 @@ class Details extends StatelessWidget {
                                         'Added Successfully', true);
                                   }
                                 } else {
-                                  showbar(
-                                      'add Size', 'subtitle', 'desc', false);
+                                  showbar('add Size', 'subtitle',
+                                      'you must add size', false);
                                 }
                               },
                               style: ElevatedButton.styleFrom(

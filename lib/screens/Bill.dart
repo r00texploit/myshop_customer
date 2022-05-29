@@ -34,22 +34,34 @@ class Bill extends StatelessWidget {
                       width: 200,
                       height: 200,
                     ),
-                    Text('Name: ' +
-                        controller.carts.value[index].name!.toString()),
-                    Text('Price: ' +
-                        controller.carts.value[index].price!.toString()),
-                    Text('Quantity: ' +
-                        controller.carts.value[index].count.toString()),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text('Name: ' +
+                          controller.carts.value[index].name!.toString()),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text('Price: ' +
+                          controller.carts.value[index].price!.toString()),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text('Quantity: ' +
+                          controller.carts.value[index].count.toString()),
+                    ),
                     controller.check
                         ? SizedBox()
                         : Text('Delivery price: 2000'),
-                    CustomTextButton(
-                        lable: 'Go Home',
-                        ontap: () {
-                          controller.carts.value.clear();
-                          Get.offAll(() => HomePage());
-                        },
-                        color: Colors.indigo)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomTextButton(
+                          lable: 'Go Home',
+                          ontap: () {
+                            controller.carts.value.clear();
+                            Get.offAll(() => HomePage());
+                          },
+                          color: Colors.indigo),
+                    )
                   ],
                 ),
               );

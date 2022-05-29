@@ -38,6 +38,7 @@ class _StepperPageState extends State<StepperPage> {
   TextEditingController cardNumber = TextEditingController();
   TextEditingController price = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  List<String> ch = ['use delivery', 'whitout delivery'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +49,9 @@ class _StepperPageState extends State<StepperPage> {
       body: SafeArea(
         child: OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
-            return _buildStepper(StepperType.vertical);
+            return GetBuilder<MainController>(builder: (context) {
+              return _buildStepper(StepperType.vertical);
+            });
           },
         ),
       ),
@@ -122,14 +125,28 @@ class _StepperPageState extends State<StepperPage> {
                         style: TextStyle(fontWeight: FontWeight.bold));
                   },
                 ),
-                CustomTextButton(
-                    lable: 'Without delivery',
-                    ontap: () {
-                      showbar('delivery', 'subtitle', 'without delivery', true);
-                      controller.check = true;
-                      controller.update();
-                    },
-                    color: Colors.indigo)
+                DropdownSearch<String>(
+                  mode: Mode.BOTTOM_SHEET,
+                  showSelectedItems: true,
+                  items: ch,
+                  dropdownSearchDecoration: const InputDecoration(
+                    labelText: "Dlivery",
+                    hintText: "select product type",
+                  ),
+                  onChanged: (value) {
+                    controller.check = true;
+                    controller.update();
+                  },
+                  selectedItem: ch[0],
+                ),
+                // CustomTextButton(
+                //     lable: 'Without delivery',
+                //     ontap: () {
+                //       showbar('delivery', 'subtitle', 'without delivery', true);
+                //       controller.check = true;
+                //       controller.update();
+                //     },
+                //     color: Colors.indigo)
               ],
             ),
           ),
@@ -194,112 +211,129 @@ class _StepperPageState extends State<StepperPage> {
                   ? StepState.disabled
                   : StepState.complete,
         ),
-        Step(
-          title: Text('Make Payment'),
-          content: Container(
-            width: 300,
-            height: 600,
-            color: Colors.black45,
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Full Price :' + controller.totalPrice.toString()),
-                  CustomTextField(
-                      controller: bankName,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'please add bank name';
-                        }
-                        return null;
-                      },
-                      lable: 'Bank Name',
-                      icon: Icon(Icons.account_box),
-                      input: TextInputType.text),
-                  CustomTextField(
-                      controller: accountType,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'please add account type';
-                        }
-                        return null;
-                      },
-                      lable: 'Account Type',
-                      icon: Icon(Icons.account_box),
-                      input: TextInputType.text),
-                  CustomTextField(
-                      controller: accountNumber,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'please add bank number';
-                        }
-                        if (value.length < 12) {
-                          return 'account number length must be more than 12';
-                        }
-                        return null;
-                      },
-                      lable: 'Account Number',
-                      icon: Icon(Icons.numbers),
-                      input: TextInputType.number),
-                  CustomTextField(
-                      controller: cardNumber,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'please add bank number';
-                        }
-                        if (value.length < 12) {
-                          return 'Card number length must be more than 12';
-                        }
-                        return null;
-                      },
-                      lable: 'Card Number',
-                      icon: Icon(Icons.numbers),
-                      input: TextInputType.number),
-                  CustomTextField(
-                      controller: price,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'please add bank number';
-                        }
-                        return null;
-                      },
-                      lable: 'Price',
-                      icon: Icon(Icons.numbers),
-                      input: TextInputType.number),
-                  CustomTextField(
-                      controller: rePrice,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'please add bank number';
-                        }
-                        if (value != price.text) {
-                          return 'account number length must be more than 12';
-                        }
-                        return null;
-                      },
-                      lable: 'Re type Price',
-                      icon: Icon(Icons.numbers),
-                      input: TextInputType.number),
-                  CustomTextButton(
-                      lable: 'Make Payment',
-                      ontap: () {
+        controller.check
+            ? Step(
+                title: Text('Make Payment'),
+                content: CustomTextButton(
+                    lable: 'Make Payment',
+                    ontap: () {
+                      if (controller.check) {
+                        controller.makePayment(controller.totalPrice.toInt());
+                      } else {
                         if (formKey.currentState!.validate()) {
                           controller.makePayment(controller.totalPrice.toInt());
                         }
-                      },
-                      color: Colors.indigo)
-                ],
-              ),
-            ),
-          ),
-          isActive: currentStep >= 2,
-          state: currentStep == 2
-              ? StepState.editing
-              : currentStep < 2
-                  ? StepState.disabled
-                  : StepState.complete,
-        ),
+                      }
+                    },
+                    color: Colors.indigo),
+              )
+            : Step(
+                title: Text('Make Payment'),
+                content: Container(
+                  width: 300,
+                  height: 600,
+                  color: Colors.black45,
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Full Price :' + controller.totalPrice.toString()),
+                        CustomTextField(
+                            controller: bankName,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'please add bank name';
+                              }
+                              return null;
+                            },
+                            lable: 'Bank Name',
+                            icon: Icon(Icons.account_box),
+                            input: TextInputType.text),
+                        CustomTextField(
+                            controller: accountType,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'please add account type';
+                              }
+                              return null;
+                            },
+                            lable: 'Account Type',
+                            icon: Icon(Icons.account_box),
+                            input: TextInputType.text),
+                        CustomTextField(
+                            controller: accountNumber,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'please add bank number';
+                              }
+                              if (value.length < 12) {
+                                return 'account number length must be more than 12';
+                              }
+                              return null;
+                            },
+                            lable: 'Account Number',
+                            icon: Icon(Icons.numbers),
+                            input: TextInputType.number),
+                        CustomTextField(
+                            controller: cardNumber,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'please add bank number';
+                              }
+                              if (value.length < 12) {
+                                return 'Card number length must be more than 12';
+                              }
+                              return null;
+                            },
+                            lable: 'Card Number',
+                            icon: Icon(Icons.numbers),
+                            input: TextInputType.number),
+                        CustomTextField(
+                            controller: price,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'please add bank number';
+                              }
+                              return null;
+                            },
+                            lable: 'Price',
+                            icon: Icon(Icons.numbers),
+                            input: TextInputType.number),
+                        CustomTextField(
+                            controller: rePrice,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'please add bank number';
+                              }
+                              if (value != price.text) {
+                                return 'account number length must be more than 12';
+                              }
+                              return null;
+                            },
+                            lable: 'Re type Price',
+                            icon: Icon(Icons.numbers),
+                            input: TextInputType.number),
+                        CustomTextButton(
+                            lable: 'Make Payment',
+                            ontap: () {
+                              if (formKey.currentState!.validate()) {
+                                controller
+                                    .makePayment(controller.totalPrice.toInt());
+                              }
+                            },
+                            color: Colors.indigo)
+                      ],
+                    ),
+                  ),
+                ),
+                isActive: currentStep >= 2,
+                state: currentStep == 2
+                    ? StepState.editing
+                    : currentStep < 2
+                        ? StepState.disabled
+                        : StepState.complete,
+              )
       ],
     );
   }
