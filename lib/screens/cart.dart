@@ -69,7 +69,7 @@ class _CartPageState extends State<CartPage> {
           CustomTextButton(
               lable: 'Checkout',
               ontap: () async {
-                await controller.getAllUser();
+                // await controller.getAllUser();
                 // await controller.getSalary();
                 Get.to(() => CheckOut());
               },
@@ -207,15 +207,26 @@ class _CartPageState extends State<CartPage> {
                                             children: <Widget>[
                                               GestureDetector(
                                                 onTap: () {
-                                                  controller
-                                                      .carts
-                                                      .value[position]
-                                                      .count -= 1;
-                                                  controller.totalPrice -=
-                                                      controller
+                                                  if (controller
                                                           .carts
                                                           .value[position]
-                                                          .price!;
+                                                          .count >
+                                                      0) {
+                                                    controller
+                                                        .carts
+                                                        .value[position]
+                                                        .count -= 1;
+                                                    controller.totalPrice -=
+                                                        controller
+                                                            .carts
+                                                            .value[position]
+                                                            .price!;
+                                                  } else {
+                                                    controller
+                                                        .carts
+                                                        .value[position]
+                                                        .count = 0;
+                                                  }
                                                   controller.carts.refresh();
                                                 },
                                                 child: Icon(

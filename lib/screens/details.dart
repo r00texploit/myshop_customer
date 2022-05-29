@@ -205,29 +205,35 @@ class Details extends StatelessWidget {
                           builder: (logic) {
                             return ElevatedButton(
                               onPressed: () {
-                                bool ch = false;
-                                var res = logic.carts.value.forEach((element) {
-                                  if (element.name == data1.name) {
-                                    ch = true;
+                                if (size.text.isNotEmpty) {
+                                  bool ch = false;
+                                  var res =
+                                      logic.carts.value.forEach((element) {
+                                    if (element.name == data1.name) {
+                                      ch = true;
+                                    }
+                                  });
+                                  if (ch) {
+                                    showbar('Add To  Cart', 'subtitle',
+                                        'ALREADY ADDED', true);
+                                  } else {
+                                    logic.carts.value.add(Cart(
+                                        count: 1,
+                                        type: data1.type,
+                                        price: data1.price,
+                                        color: color,
+                                        image: data1.image,
+                                        name: data1.name,
+                                        description: data1.description,
+                                        number: data1.number,
+                                        size: size.text));
+                                    logic.totalPrice += data1.price!;
+                                    showbar('Add To  Cart', 'subtitle',
+                                        'Added Successfully', true);
                                   }
-                                });
-                                if (ch) {
-                                  showbar('Add To  Cart', 'subtitle',
-                                      'ALREADY ADDED', true);
                                 } else {
-                                  logic.carts.value.add(Cart(
-                                      count: 1,
-                                      type: data1.type,
-                                      price: data1.price,
-                                      color: color,
-                                      image: data1.image,
-                                      name: data1.name,
-                                      description: data1.description,
-                                      number: data1.number,
-                                      size: size.text));
-                                  logic.totalPrice += data1.price!;
-                                  showbar('Add To  Cart', 'subtitle',
-                                      'Added Successfully', true);
+                                  showbar(
+                                      'add Size', 'subtitle', 'desc', false);
                                 }
                               },
                               style: ElevatedButton.styleFrom(

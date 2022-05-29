@@ -4,8 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:my_shop/controllers/auth_controller.dart';
 import 'package:my_shop/controllers/home_controller.dart';
+import 'package:my_shop/screens/cart.dart';
 import 'package:my_shop/widgets/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_shop/widgets/custom_textfield.dart';
+import 'package:my_shop/widgets/snackbar.dart';
 
 class CheckOut extends StatelessWidget {
   const CheckOut({Key? key}) : super(key: key);
@@ -23,7 +28,16 @@ class StepperPage extends StatefulWidget {
 
 class _StepperPageState extends State<StepperPage> {
   int currentStep = 0;
-
+  static FirebaseAuth auth = FirebaseAuth.instance;
+  String? uid = auth.currentUser!.uid;
+  String? number = auth.currentUser!.phoneNumber;
+  TextEditingController rePrice = TextEditingController();
+  TextEditingController bankName = TextEditingController();
+  TextEditingController accountType = TextEditingController();
+  TextEditingController accountNumber = TextEditingController();
+  TextEditingController cardNumber = TextEditingController();
+  TextEditingController price = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,14 +48,7 @@ class _StepperPageState extends State<StepperPage> {
       body: SafeArea(
         child: OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
-            switch (orientation) {
-              case Orientation.portrait:
-                return _buildStepper(StepperType.vertical);
-              case Orientation.landscape:
-                return _buildStepper(StepperType.horizontal);
-              default:
-                throw UnimplementedError(orientation.toString());
-            }
+            return _buildStepper(StepperType.vertical);
           },
         ),
       ),
@@ -50,6 +57,7 @@ class _StepperPageState extends State<StepperPage> {
 
   CupertinoStepper _buildStepper(StepperType type) {
     MainController controller = Get.find();
+    AuthController logic = Get.find();
     final canCancel = currentStep > 0;
     final canContinue = currentStep < 3;
     String delivery;
@@ -107,8 +115,21 @@ class _StepperPageState extends State<StepperPage> {
                         '  ' +
                         DateFormat.jm().format(time).toString(),
                     style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('Your Number: ' + controller.number.toString(),
-                    style: TextStyle(fontWeight: FontWeight.bold))
+                GetBuilder<AuthController>(
+                  builder: (_) {
+                    return Text(
+                        'Your Number: ' + _.users.first.number.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold));
+                  },
+                ),
+                CustomTextButton(
+                    lable: 'Without delivery',
+                    ontap: () {
+                      showbar('delivery', 'subtitle', 'without delivery', true);
+                      controller.check = true;
+                      controller.update();
+                    },
+                    color: Colors.indigo)
               ],
             ),
           ),
@@ -142,7 +163,10 @@ class _StepperPageState extends State<StepperPage> {
                           Text('Price: ' +
                               controller.carts.value[index].price!.toString()),
                           Text('Quantity: ' +
-                              controller.carts.value[index].count.toString())
+                              controller.carts.value[index].count.toString()),
+                          controller.check
+                              ? SizedBox()
+                              : Text('Delivery price: 2000')
                         ],
                       ),
                     );
@@ -152,10 +176,15 @@ class _StepperPageState extends State<StepperPage> {
               SizedBox(
                 height: 20,
               ),
-              Text(
-                'Full Price:  ' + controller.totalPrice.toString(),
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
+              controller.check
+                  ? Text(
+                      'Full Price:  ' + controller.totalPrice.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  : Text(
+                      'Full Price:  ' + '${controller.totalPrice.value + 200}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
             ],
           ),
           isActive: currentStep >= 1,
@@ -167,21 +196,101 @@ class _StepperPageState extends State<StepperPage> {
         ),
         Step(
           title: Text('Make Payment'),
-          content: LimitedBox(
-            maxWidth: 300,
-            maxHeight: 300,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Full Price :' + controller.totalPrice.toString()),
-                Text('Your Salary: ' + '50000000000'),
-                CustomTextButton(
-                    lable: 'Make Payment',
-                    ontap: () {
-                      controller.makePayment(controller.totalPrice.toInt());
-                    },
-                    color: Colors.indigo)
-              ],
+          content: Container(
+            width: 300,
+            height: 600,
+            color: Colors.black45,
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Full Price :' + controller.totalPrice.toString()),
+                  CustomTextField(
+                      controller: bankName,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'please add bank name';
+                        }
+                        return null;
+                      },
+                      lable: 'Bank Name',
+                      icon: Icon(Icons.account_box),
+                      input: TextInputType.text),
+                  CustomTextField(
+                      controller: accountType,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'please add account type';
+                        }
+                        return null;
+                      },
+                      lable: 'Account Type',
+                      icon: Icon(Icons.account_box),
+                      input: TextInputType.text),
+                  CustomTextField(
+                      controller: accountNumber,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'please add bank number';
+                        }
+                        if (value.length < 12) {
+                          return 'account number length must be more than 12';
+                        }
+                        return null;
+                      },
+                      lable: 'Account Number',
+                      icon: Icon(Icons.numbers),
+                      input: TextInputType.number),
+                  CustomTextField(
+                      controller: cardNumber,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'please add bank number';
+                        }
+                        if (value.length < 12) {
+                          return 'Card number length must be more than 12';
+                        }
+                        return null;
+                      },
+                      lable: 'Card Number',
+                      icon: Icon(Icons.numbers),
+                      input: TextInputType.number),
+                  CustomTextField(
+                      controller: price,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'please add bank number';
+                        }
+                        return null;
+                      },
+                      lable: 'Price',
+                      icon: Icon(Icons.numbers),
+                      input: TextInputType.number),
+                  CustomTextField(
+                      controller: rePrice,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'please add bank number';
+                        }
+                        if (value != price.text) {
+                          return 'account number length must be more than 12';
+                        }
+                        return null;
+                      },
+                      lable: 'Re type Price',
+                      icon: Icon(Icons.numbers),
+                      input: TextInputType.number),
+                  CustomTextButton(
+                      lable: 'Make Payment',
+                      ontap: () {
+                        if (formKey.currentState!.validate()) {
+                          controller.makePayment(controller.totalPrice.toInt());
+                        }
+                      },
+                      color: Colors.indigo)
+                ],
+              ),
             ),
           ),
           isActive: currentStep >= 2,

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:my_shop/model/user_model.dart';
+import 'package:my_shop/screens/Bill.dart';
 import 'package:my_shop/screens/home.dart';
 import 'package:my_shop/widgets/loading.dart';
 import 'package:my_shop/widgets/snackbar.dart';
@@ -22,6 +23,7 @@ class MainController extends GetxController {
   List pro = [];
   List<Product> genders = [];
   RxInt totalPrice = 0.obs;
+  bool check = false;
   int? number;
   late CollectionReference collectionReference;
   late CollectionReference collectionReference2;
@@ -110,10 +112,10 @@ class MainController extends GetxController {
               "time": DateTime.now()
             }))
             .whenComplete(() {
-          carts.value.clear();
+          // carts.value.clear();
           Get.back();
           showbar('payment', 'subtitle', 'payment successful', true);
-          Get.offAll(() => HomePage());
+          Get.offAll(() => Bill());
         });
       }
     } catch (e) {

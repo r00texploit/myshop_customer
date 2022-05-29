@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_shop/controllers/home_controller.dart';
+import 'package:my_shop/model/user_model.dart';
 import 'package:my_shop/screens/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,6 +28,9 @@ class AuthController extends GetxController {
   static AuthController instance = Get.find();
   late Rx<User?> _user;
   static FirebaseAuth auth = FirebaseAuth.instance;
+  late CollectionReference collectionReference4;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  RxList<Users> users = RxList<Users>([]);
   late Widget route;
   @override
   void onReady() {
@@ -43,18 +47,39 @@ class AuthController extends GetxController {
     repassword = TextEditingController();
     number = TextEditingController();
     name = TextEditingController();
+    collectionReference4 = firebaseFirestore.collection("users");
     _user = Rx<User?>(auth.currentUser);
     _user.bindStream(auth.userChanges());
+    // users.bindStream(getAllUser());
+    // getAllUser();
     ever(_user, _initialScreen);
     super.onInit();
   }
+
+  Stream<List<Users>> getAllUser() => collectionReference4
+      .where('uid', isEqualTo: auth.currentUser!.uid)
+      .snapshots()
+      .map((query) => query.docs.map((item) => Users.fromMap(item)).toList());
 
   String? get user_ch => _user.value!.email;
   _initialScreen(User? user) {
     if (user == null) {
       route = LoginView();
     } else {
+      users.bindStream(getAllUser());
       route = HomePage();
+    }
+  }
+
+  late String uid;
+  late int phone;
+  getUser() async {
+    String uid = auth.currentUser!.uid;
+    var res = await collectionReference4.where('uid', isEqualTo: uid).get();
+    if (res.docs.isNotEmpty) {
+      print(res.docs.first['number']);
+      phone = res.docs.first['number'];
+      uid = res.docs.first['uid'];
     }
   }
 
@@ -148,12 +173,12 @@ class AuthController extends GetxController {
                   .signOut()
                   .then((value) => Get.offAll(() => LoginView()));
             },
-            child: const Text('yes')),
+            child: const Text('YES')),
         TextButton(
             onPressed: () {
               Get.back();
             },
-            child: const Text('back'))
+            child: const Text('BACK'))
       ],
     ));
   }
@@ -175,6 +200,11 @@ class AuthController extends GetxController {
           'name': name.text,
           'email': email.text,
           'number': int.tryParse(number.text),
+          'uid': credential.user!.uid,
+        });
+        await FirebaseFirestore.instance.collection('Bank').doc().set({
+          'name': name.text,
+          'balance': 8000000000,
           'uid': credential.user!.uid,
         });
         prefs.setInt('${credential.user!.uid}', 500000);
@@ -200,6 +230,7 @@ class AuthController extends GetxController {
         Get.back();
         email.clear();
         password.clear();
+        users.bindStream(getAllUser());
         Get.offAll(() => HomePage());
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
