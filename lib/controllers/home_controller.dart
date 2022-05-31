@@ -103,7 +103,7 @@ class MainController extends GetxController {
     try {
       showdilog();
       {
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('payment')
             .doc()
             .set(({
