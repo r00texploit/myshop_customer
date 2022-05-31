@@ -16,57 +16,63 @@ class Bill extends StatelessWidget {
         title: Text('Bill'),
       ),
       body: Center(
-        child: Container(
-          alignment: Alignment.center,
-          width: 300,
-          height: 350,
-          child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: controller.carts.value.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Card(
-                elevation: 2,
-                child: Column(
-                  children: [
-                    Image(
-                      image: NetworkImage(controller.carts.value[index].image!),
-                      width: 200,
-                      height: 200,
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              width: 300,
+              height: 370,
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: controller.carts.value.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    elevation: 2,
+                    child: Column(
+                      children: [
+                        Image(
+                          image: NetworkImage(
+                              controller.carts.value[index].image!),
+                          width: 200,
+                          height: 200,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text('Name: ' +
+                              controller.carts.value[index].name!.toString()),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text('Price: ' +
+                              controller.carts.value[index].price!.toString()),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text('Quantity: ' +
+                              controller.carts.value[index].count.toString()),
+                        ),
+                        // controller.check
+                        //     ? SizedBox()
+                        //     : Text('Delivery price: 2000'),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text('Name: ' +
-                          controller.carts.value[index].name!.toString()),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text('Price: ' +
-                          controller.carts.value[index].price!.toString()),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text('Quantity: ' +
-                          controller.carts.value[index].count.toString()),
-                    ),
-                    controller.check
-                        ? SizedBox()
-                        : Text('Delivery price: 2000'),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomTextButton(
-                          lable: 'Go Home',
-                          ontap: () {
-                            controller.carts.value.clear();
-                            Get.offAll(() => HomePage());
-                          },
-                          color: Colors.indigo),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomTextButton(
+                  lable: 'Go Home',
+                  ontap: () {
+                    controller.carts.value.clear();
+                    controller.totalPrice.value = 0;
+                    Get.offAll(() => HomePage());
+                  },
+                  color: Colors.indigo),
+            )
+          ],
         ),
       ),
     );

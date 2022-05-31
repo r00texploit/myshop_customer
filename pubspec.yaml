@@ -24,7 +24,6 @@ dependencies:
   timeline_tile: null
   cupertino_stepper: null
   intl: null
-  shared_preferences: null
   search_page:
 dev_dependencies:
   flutter_test: {sdk: flutter}

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:my_shop/controllers/home_controller.dart';
 import 'package:my_shop/model/user_model.dart';
 import 'package:my_shop/screens/home.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/login_view.dart';
 import '../widgets/loading.dart';
@@ -187,7 +186,6 @@ class AuthController extends GetxController {
     if (formKey2.currentState!.validate()) {
       try {
         showdilog();
-        final prefs = await SharedPreferences.getInstance();
 
         final credential = await auth.createUserWithEmailAndPassword(
             email: email.text, password: password.text);
@@ -207,7 +205,6 @@ class AuthController extends GetxController {
           'balance': 8000000000,
           'uid': credential.user!.uid,
         });
-        prefs.setInt('${credential.user!.uid}', 500000);
         Get.back();
         email.clear();
         password.clear();

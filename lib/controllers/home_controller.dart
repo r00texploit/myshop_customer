@@ -7,7 +7,6 @@ import 'package:my_shop/screens/Bill.dart';
 import 'package:my_shop/screens/home.dart';
 import 'package:my_shop/widgets/loading.dart';
 import 'package:my_shop/widgets/snackbar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/cart_model.dart';
 import '../model/delivery_model.dart';
@@ -91,12 +90,6 @@ class MainController extends GetxController {
       number = res.docs[0]['number'];
       uid = res.docs[0]['uid'];
     }
-  }
-
-  late int price;
-  getSalary() async {
-    final prefs = await SharedPreferences.getInstance();
-    price = prefs.getInt(uid)!;
   }
 
   void makePayment(int totalPrice) async {

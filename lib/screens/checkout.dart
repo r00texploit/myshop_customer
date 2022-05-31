@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:my_shop/controllers/auth_controller.dart';
 import 'package:my_shop/controllers/home_controller.dart';
+import 'package:my_shop/screens/Bill.dart';
+import 'package:my_shop/screens/bay_by_bank.dart';
 import 'package:my_shop/screens/cart.dart';
 import 'package:my_shop/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,7 +40,7 @@ class _StepperPageState extends State<StepperPage> {
   TextEditingController cardNumber = TextEditingController();
   TextEditingController price = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  List<String> ch = ['use delivery', 'whitout delivery'];
+  List<String> ch = ['Pay by bank', 'cash payment'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,20 +127,20 @@ class _StepperPageState extends State<StepperPage> {
                         style: TextStyle(fontWeight: FontWeight.bold));
                   },
                 ),
-                DropdownSearch<String>(
-                  mode: Mode.BOTTOM_SHEET,
-                  showSelectedItems: true,
-                  items: ch,
-                  dropdownSearchDecoration: const InputDecoration(
-                    labelText: "Dlivery",
-                    hintText: "select product type",
-                  ),
-                  onChanged: (value) {
-                    controller.check = true;
-                    controller.update();
-                  },
-                  selectedItem: ch[0],
-                ),
+                // DropdownSearch<String>(
+                //   mode: Mode.BOTTOM_SHEET,
+                //   showSelectedItems: true,
+                //   items: ch,
+                //   dropdownSearchDecoration: const InputDecoration(
+                //     labelText: "Dlivery",
+                //     hintText: "select product type",
+                //   ),
+                //   onChanged: (value) {
+                //     controller.check = true;
+                //     controller.update();
+                //   },
+                //   selectedItem: ch[0],
+                // ),
                 // CustomTextButton(
                 //     lable: 'Without delivery',
                 //     ontap: () {
@@ -179,11 +181,11 @@ class _StepperPageState extends State<StepperPage> {
                               controller.carts.value[index].name!.toString()),
                           Text('Price: ' +
                               controller.carts.value[index].price!.toString()),
-                          Text('Quantity: ' +
-                              controller.carts.value[index].count.toString()),
-                          controller.check
-                              ? SizedBox()
-                              : Text('Delivery price: 2000')
+                          // Text('Quantity: ' +
+                          //     controller.carts.value[index].count.toString()),
+                          // controller.check
+                          //     ? SizedBox()
+                          //     : Text('Delivery price: 2000')
                         ],
                       ),
                     );
@@ -193,15 +195,10 @@ class _StepperPageState extends State<StepperPage> {
               SizedBox(
                 height: 20,
               ),
-              controller.check
-                  ? Text(
-                      'Full Price:  ' + controller.totalPrice.toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )
-                  : Text(
-                      'Full Price:  ' + '${controller.totalPrice.value + 200}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )
+              Text(
+                'Full Price:  ' + '${controller.totalPrice.value + 200}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
             ],
           ),
           isActive: currentStep >= 1,
@@ -211,129 +208,43 @@ class _StepperPageState extends State<StepperPage> {
                   ? StepState.disabled
                   : StepState.complete,
         ),
-        controller.check
-            ? Step(
-                title: Text('Make Payment'),
-                content: CustomTextButton(
-                    lable: 'Make Payment',
-                    ontap: () {
-                      if (controller.check) {
-                        controller.makePayment(controller.totalPrice.toInt());
-                      } else {
-                        if (formKey.currentState!.validate()) {
-                          controller.makePayment(controller.totalPrice.toInt());
-                        }
-                      }
-                    },
-                    color: Colors.indigo),
-              )
-            : Step(
-                title: Text('Make Payment'),
-                content: Container(
-                  width: 300,
-                  height: 600,
-                  color: Colors.black45,
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Full Price :' + controller.totalPrice.toString()),
-                        CustomTextField(
-                            controller: bankName,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'please add bank name';
-                              }
-                              return null;
-                            },
-                            lable: 'Bank Name',
-                            icon: Icon(Icons.account_box),
-                            input: TextInputType.text),
-                        CustomTextField(
-                            controller: accountType,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'please add account type';
-                              }
-                              return null;
-                            },
-                            lable: 'Account Type',
-                            icon: Icon(Icons.account_box),
-                            input: TextInputType.text),
-                        CustomTextField(
-                            controller: accountNumber,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'please add bank number';
-                              }
-                              if (value.length < 12) {
-                                return 'account number length must be more than 12';
-                              }
-                              return null;
-                            },
-                            lable: 'Account Number',
-                            icon: Icon(Icons.numbers),
-                            input: TextInputType.number),
-                        CustomTextField(
-                            controller: cardNumber,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'please add bank number';
-                              }
-                              if (value.length < 12) {
-                                return 'Card number length must be more than 12';
-                              }
-                              return null;
-                            },
-                            lable: 'Card Number',
-                            icon: Icon(Icons.numbers),
-                            input: TextInputType.number),
-                        CustomTextField(
-                            controller: price,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'please add bank number';
-                              }
-                              return null;
-                            },
-                            lable: 'Price',
-                            icon: Icon(Icons.numbers),
-                            input: TextInputType.number),
-                        CustomTextField(
-                            controller: rePrice,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'please add bank number';
-                              }
-                              if (value != price.text) {
-                                return 'account number length must be more than 12';
-                              }
-                              return null;
-                            },
-                            lable: 'Re type Price',
-                            icon: Icon(Icons.numbers),
-                            input: TextInputType.number),
-                        CustomTextButton(
-                            lable: 'Make Payment',
-                            ontap: () {
-                              if (formKey.currentState!.validate()) {
-                                controller
-                                    .makePayment(controller.totalPrice.toInt());
-                              }
-                            },
-                            color: Colors.indigo)
-                      ],
-                    ),
-                  ),
-                ),
-                isActive: currentStep >= 2,
-                state: currentStep == 2
-                    ? StepState.editing
-                    : currentStep < 2
-                        ? StepState.disabled
-                        : StepState.complete,
-              )
+        Step(
+          title: Text('Make Payment'),
+          content: Column(
+            children: [
+              CustomTextButton(
+                  lable: 'Make Payment by Bank',
+                  ontap: () {
+                    Get.to(() => BayByBank());
+                    // if (controller.check) {
+                    //   controller.makePayment(controller.totalPrice.toInt());
+                    // } else {
+                    //   if (formKey.currentState!.validate()) {
+                    //     controller.makePayment(controller.totalPrice.toInt());
+                    //   }
+                    // }
+                  },
+                  color: Colors.indigo),
+              SizedBox(
+                height: 20,
+              ),
+              CustomTextButton(
+                  lable: 'Make Payment By Cash',
+                  ontap: () {
+                    Get.to(() => Bill());
+
+                    // if (controller.check) {
+                    //   controller.makePayment(controller.totalPrice.toInt());
+                    // } else {
+                    //   if (formKey.currentState!.validate()) {
+                    //     controller.makePayment(controller.totalPrice.toInt());
+                    //   }
+                    // }
+                  },
+                  color: Colors.indigo),
+            ],
+          ),
+        )
       ],
     );
   }

@@ -66,14 +66,16 @@ class _CartPageState extends State<CartPage> {
             ],
           ),
           Utils.getSizedBox(height: 8, width: 0),
-          CustomTextButton(
-              lable: 'Checkout',
-              ontap: () async {
-                // await controller.getAllUser();
-                // await controller.getSalary();
-                Get.to(() => CheckOut());
-              },
-              color: Colors.indigo),
+          controller.carts.value.isEmpty
+              ? SizedBox()
+              : CustomTextButton(
+                  lable: 'Checkout',
+                  ontap: () async {
+                    // await controller.getAllUser();
+                    // await controller.getSalary();
+                    Get.to(() => CheckOut());
+                  },
+                  color: Colors.indigo),
           // RaisedButton(
           //   onPressed: () async {
 
@@ -211,7 +213,7 @@ class _CartPageState extends State<CartPage> {
                                                           .carts
                                                           .value[position]
                                                           .count >
-                                                      0) {
+                                                      1) {
                                                     controller
                                                         .carts
                                                         .value[position]
@@ -225,7 +227,7 @@ class _CartPageState extends State<CartPage> {
                                                     controller
                                                         .carts
                                                         .value[position]
-                                                        .count = 0;
+                                                        .count = 1;
                                                   }
                                                   controller.carts.refresh();
                                                 },
