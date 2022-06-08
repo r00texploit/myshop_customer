@@ -21,7 +21,7 @@ class Bill extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               width: 300,
-              height: 370,
+              height: 300,
               child: ListView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
@@ -52,6 +52,7 @@ class Bill extends StatelessWidget {
                           child: Text('Quantity: ' +
                               controller.carts.value[index].count.toString()),
                         ),
+
                         // controller.check
                         //     ? SizedBox()
                         //     : Text('Delivery price: 2000'),
@@ -60,6 +61,14 @@ class Bill extends StatelessWidget {
                   );
                 },
               ),
+            ),
+            Text('Delivery price: 150\$'),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Full Price:  ' + '${controller.totalPrice.value + 150}',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

@@ -7,8 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:my_shop/controllers/auth_controller.dart';
 import 'package:my_shop/controllers/home_controller.dart';
 import 'package:my_shop/screens/Bill.dart';
+import 'package:my_shop/screens/add_location.dart';
 import 'package:my_shop/screens/bay_by_bank.dart';
 import 'package:my_shop/screens/cart.dart';
+import 'package:my_shop/widgets/background-image.dart';
 import 'package:my_shop/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_shop/widgets/custom_textfield.dart';
@@ -39,6 +41,7 @@ class _StepperPageState extends State<StepperPage> {
   TextEditingController accountNumber = TextEditingController();
   TextEditingController cardNumber = TextEditingController();
   TextEditingController price = TextEditingController();
+  TextEditingController location = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<String> ch = ['Pay by bank', 'cash payment'];
   @override
@@ -48,23 +51,29 @@ class _StepperPageState extends State<StepperPage> {
         title: Text('CheckOut'),
         backgroundColor: Colors.indigo,
       ),
-      body: SafeArea(
-        child: OrientationBuilder(
-          builder: (BuildContext context, Orientation orientation) {
-            return GetBuilder<MainController>(builder: (context) {
-              return _buildStepper(StepperType.vertical);
-            });
-          },
-        ),
+      body: Stack(
+        children: [
+          BackgroundImage(image: 'assets/images/2.jpg'),
+          SafeArea(
+            child: OrientationBuilder(
+              builder: (BuildContext context, Orientation orientation) {
+                return GetBuilder<MainController>(builder: (logic) {
+                  return _buildStepper(StepperType.vertical, logic);
+                });
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  CupertinoStepper _buildStepper(StepperType type) {
+  CupertinoStepper _buildStepper(StepperType type, MainController logic2) {
     MainController controller = Get.find();
     AuthController logic = Get.find();
+    int ch = 0;
     final canCancel = currentStep > 0;
-    final canContinue = currentStep < 3;
+    final canContinue = currentStep < 2;
     String delivery;
     // int number = controller.users[0].number!;
     DateTime time = DateTime.now().add(Duration(days: 2));
@@ -81,6 +90,15 @@ class _StepperPageState extends State<StepperPage> {
       },
       onStepContinue: () {
         currentStep < 2 ? setState(() => currentStep += 1) : null;
+
+        // if (currentStep >= 0) {
+        //   if (logic2.location_lat == 0) {
+        //     setState(() => showbar(
+        //         'location', 'subtitle', 'please add your location', false));
+        //   } else {
+        //     currentStep < 2 ? setState(() => currentStep += 1) : null;
+        //   }
+        // }
       },
       steps: [
         Step(
@@ -92,24 +110,35 @@ class _StepperPageState extends State<StepperPage> {
               children: [
                 Text(
                   'Choose Delivery Company:  ',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.white),
                 ),
                 SizedBox(
                   height: 40,
                 ),
-                DropdownSearch<String>(
-                  mode: Mode.BOTTOM_SHEET,
-                  showSelectedItems: true,
-                  items: List.generate(controller.delivery.length,
-                      (index) => controller.delivery[index].name.toString()),
-                  dropdownSearchDecoration: const InputDecoration(
-                    labelText: "Deliveries Company",
-                    hintText: "select Deliveries Company",
+                Container(
+                  width: 250,
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20)),
+                  // color: Colors.white,
+                  child: DropdownSearch<String>(
+                    mode: Mode.BOTTOM_SHEET,
+                    showSelectedItems: true,
+                    items: List.generate(controller.delivery.length,
+                        (index) => controller.delivery[index].name.toString()),
+                    dropdownSearchDecoration: const InputDecoration(
+                      labelText: "Deliveries Company",
+                      hintText: "select Deliveries Company",
+                    ),
+                    onChanged: (value) {
+                      delivery = value!;
+                    },
+                    selectedItem: controller.delivery[0].name.toString(),
                   ),
-                  onChanged: (value) {
-                    delivery = value!;
-                  },
-                  selectedItem: controller.delivery[0].name.toString(),
                 ),
                 SizedBox(
                   height: 40,
@@ -119,14 +148,41 @@ class _StepperPageState extends State<StepperPage> {
                         DateFormat.yMd().format(time).toString() +
                         '  ' +
                         DateFormat.jm().format(time).toString(),
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white)),
                 GetBuilder<AuthController>(
                   builder: (_) {
                     return Text(
                         'Your Number: ' + _.users.first.number.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold));
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white));
                   },
                 ),
+                Text(
+                  'Price: 150\$  ',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.white),
+                ),
+                // CustomTextField(
+                //     controller: location,
+                //     validator: (value) {},
+                //     lable: 'your location',
+                //     icon: Icon(Icons.my_location),
+                //     input: TextInputType.text,
+                //     ),
+                logic2.location_lat == 0
+                    ? SizedBox()
+                    : Text('Location Added',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white)),
+                CustomTextButton(
+                    lable: 'addLocation',
+                    ontap: () {
+                      Get.to(() => AddLocation());
+                    },
+                    color: Colors.indigo)
                 // DropdownSearch<String>(
                 //   mode: Mode.BOTTOM_SHEET,
                 //   showSelectedItems: true,
@@ -177,15 +233,18 @@ class _StepperPageState extends State<StepperPage> {
                             width: 200,
                             height: 200,
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Text('Name: ' +
                               controller.carts.value[index].name!.toString()),
                           Text('Price: ' +
                               controller.carts.value[index].price!.toString()),
-                          // Text('Quantity: ' +
-                          //     controller.carts.value[index].count.toString()),
+                          Text('Quantity: ' +
+                              controller.carts.value[index].count.toString()),
                           // controller.check
                           //     ? SizedBox()
-                          //     : Text('Delivery price: 2000')
+                          //     :
                         ],
                       ),
                     );
@@ -193,11 +252,18 @@ class _StepperPageState extends State<StepperPage> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
+              ),
+              Text('Delivery price: 150\$',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white)),
+              SizedBox(
+                height: 10,
               ),
               Text(
-                'Full Price:  ' + '${controller.totalPrice.value + 200}',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                'Full Price:  ' + '${controller.totalPrice.value + 150}',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               )
             ],
           ),

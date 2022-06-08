@@ -44,6 +44,7 @@ class _BayByBankState extends State<BayByBank> {
                 children: [
                   // Center(child: Text('Full Price :' + controller.totalPrice.toString())),
                   CustomTextField(
+                      bol: false,
                       controller: bankName,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -55,6 +56,7 @@ class _BayByBankState extends State<BayByBank> {
                       icon: Icon(Icons.account_box),
                       input: TextInputType.text),
                   CustomTextField(
+                      bol: false,
                       controller: accountType,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -66,6 +68,7 @@ class _BayByBankState extends State<BayByBank> {
                       icon: Icon(Icons.account_box),
                       input: TextInputType.text),
                   CustomTextField(
+                      bol: false,
                       controller: accountNumber,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -80,6 +83,7 @@ class _BayByBankState extends State<BayByBank> {
                       icon: Icon(Icons.numbers),
                       input: TextInputType.number),
                   CustomTextField(
+                      bol: false,
                       controller: cardNumber,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -94,6 +98,7 @@ class _BayByBankState extends State<BayByBank> {
                       icon: Icon(Icons.numbers),
                       input: TextInputType.number),
                   CustomTextField(
+                      bol: false,
                       controller: price,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -105,6 +110,7 @@ class _BayByBankState extends State<BayByBank> {
                       icon: Icon(Icons.numbers),
                       input: TextInputType.number),
                   CustomTextField(
+                      bol: false,
                       controller: rePrice,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -122,7 +128,8 @@ class _BayByBankState extends State<BayByBank> {
                       lable: 'Make Payment',
                       ontap: () {
                         if (formKey.currentState!.validate()) {
-                          Get.to(() => Bill());
+                          controller.makePayment(controller.totalPrice.value);
+                          // Get.to(() => Bill());
                         }
                       },
                       color: Colors.indigo)

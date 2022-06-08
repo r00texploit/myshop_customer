@@ -5,7 +5,9 @@ class CustomTextField extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.validator,
-    required this.lable, required this.icon,required this.input,
+    required this.lable,
+    required this.icon,
+    required this.input, required this.bol,
   }) : super(key: key);
   // final double width, height;
   final TextEditingController controller;
@@ -13,6 +15,7 @@ class CustomTextField extends StatelessWidget {
   final String lable;
   final Widget icon;
   final TextInputType input;
+  final bool bol ;
   @override
   Widget build(BuildContext context) {
     TextEditingController text = TextEditingController();
@@ -26,6 +29,7 @@ class CustomTextField extends StatelessWidget {
         height: height * 0.1,
         width: width * 0.8,
         child: TextFormField(
+          obscureText: bol,
           keyboardType: input,
           controller: controller,
           validator: validator,

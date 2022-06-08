@@ -72,6 +72,7 @@ class GenderPage extends StatelessWidget {
           )
         : CarouselSlider(
             options: CarouselOptions(
+              scrollDirection: Axis.vertical,
               height: 370,
               enlargeCenterPage: true,
               disableCenter: true,

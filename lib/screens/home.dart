@@ -170,6 +170,7 @@ class _HomePageState extends State<HomePage> {
     return Obx(() {
       return CarouselSlider(
           options: CarouselOptions(
+            autoPlay: true,
             height: 370,
             enlargeCenterPage: true,
             disableCenter: true,

@@ -23,6 +23,8 @@ class MainController extends GetxController {
   List<Product> genders = [];
   RxInt totalPrice = 0.obs;
   bool check = false;
+  double location_lat = 0;
+  double location_long = 0;
   int? number;
   late CollectionReference collectionReference;
   late CollectionReference collectionReference2;
