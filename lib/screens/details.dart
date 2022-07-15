@@ -170,6 +170,7 @@ class Details extends StatelessWidget {
                             prefixIcon: Icon(Icons.numbers),
 
                             labelText: 'size',
+                            hintText: ' l-xl-xxl',
 
                             labelStyle: const TextStyle(color: Colors.black),
                             // hintText: hint,
@@ -205,7 +206,13 @@ class Details extends StatelessWidget {
                           builder: (logic) {
                             return ElevatedButton(
                               onPressed: () {
-                                if (size.text.isNotEmpty) {
+                                if (size.text.isNotEmpty &&
+                                    (size.text == 'xl' ||
+                                        size.text == 'xxl' ||
+                                        size.text == 'l' ||
+                                        size.text.toString() ==
+                                            List.generate(48,
+                                                (index) => '${index + 1}'))) {
                                   bool ch = false;
                                   var res =
                                       logic.carts.value.forEach((element) {

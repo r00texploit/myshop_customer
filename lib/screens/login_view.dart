@@ -17,7 +17,7 @@ class LoginView extends StatelessWidget {
       backgroundColor: Colors.indigo,
       body: Stack(
         children: [
-          BackgroundImage(image: 'assets/images/2.jpg'),
+          BackgroundImage(image: 'assets/images/3.jpg'),
           Form(
             key: controller.formKey,
             child: Padding(

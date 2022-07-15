@@ -21,7 +21,12 @@ class CheckOut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StepperPage();
+    return GetBuilder<MainController>(
+      initState: (_) {},
+      builder: (_) {
+        return StepperPage();
+      },
+    );
   }
 }
 
@@ -53,7 +58,7 @@ class _StepperPageState extends State<StepperPage> {
       ),
       body: Stack(
         children: [
-          BackgroundImage(image: 'assets/images/2.jpg'),
+          BackgroundImage(image: 'assets/images/3.jpg'),
           SafeArea(
             child: OrientationBuilder(
               builder: (BuildContext context, Orientation orientation) {
@@ -89,16 +94,16 @@ class _StepperPageState extends State<StepperPage> {
         currentStep > 0 ? setState(() => currentStep -= 1) : null;
       },
       onStepContinue: () {
-        currentStep < 2 ? setState(() => currentStep += 1) : null;
-
-        // if (currentStep >= 0) {
-        //   if (logic2.location_lat == 0) {
-        //     setState(() => showbar(
-        //         'location', 'subtitle', 'please add your location', false));
-        //   } else {
-        //     currentStep < 2 ? setState(() => currentStep += 1) : null;
-        //   }
-        // }
+        // currentStep < 2 ? setState(() => currentStep += 1) : null;
+        print(logic2.location_lat);
+        if (currentStep >= 0) {
+          if (logic2.location_lat == 0) {
+            setState(() => showbar(
+                'location', 'subtitle', 'please add your location', false));
+          } else {
+            currentStep < 2 ? setState(() => currentStep += 1) : null;
+          }
+        }
       },
       steps: [
         Step(

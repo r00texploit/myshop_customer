@@ -113,6 +113,9 @@ class AuthController extends GetxController {
     if (value.length < 10) {
       return "Phone length must be more than 10";
     }
+    if (value.length > 10) {
+      return "Phone length must not be more than 10";
+    }
 
     return null;
   }

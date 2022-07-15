@@ -21,7 +21,7 @@ class RegisterView extends StatelessWidget {
       // ),
       body: Stack(
         children: [
-          BackgroundImage(image: 'assets/images/2.jpg'),
+          BackgroundImage(image: 'assets/images/3.jpg'),
           Form(
             key: controller.formKey2,
             child: Padding(

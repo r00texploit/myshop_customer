@@ -20,11 +20,6 @@ List collections = [
     'image':
         'https://images.unsplash.com/photo-1621452773781-0f992fd1f5cb?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTR8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
   },
-  {
-    'title': 'Accessors',
-    'image':
-        'https://media.istockphoto.com/photos/luxury-fashionable-gold-clothing-and-stationery-items-flat-lay-on-picture-id1094768184?b=1&k=20&m=1094768184&s=170667a&w=0&h=1rYNnuzORLPDe3JAX1HJzWF6ItCJ5WuL7mcNJ37jqNM=',
-  },
 ];
 
 List populars = [

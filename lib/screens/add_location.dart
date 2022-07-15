@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:location/location.dart' as loca;
@@ -52,9 +53,11 @@ class _AddLocationState extends State<AddLocation> {
     final width = data.size.width;
     final height = data.size.height;
     return Scaffold(
+      
       appBar: AppBar(
         title: const Text('Add Location'),
         // backgroundColor: Colors.yellow[800],
+        
       ),
       body: FutureBuilder(
           // future: getlocation(),
@@ -116,7 +119,7 @@ class _AddLocationState extends State<AddLocation> {
     });
   }
 
-  MainController logic = MainController();
+  MainController logic = Get.find();
   _save() async {
     setState(() {
       showdilog();
