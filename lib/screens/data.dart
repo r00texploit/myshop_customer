@@ -19,7 +19,7 @@ List collections = [
     'title': 'Kids',
     'image':
         'https://images.unsplash.com/photo-1621452773781-0f992fd1f5cb?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTR8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-  },
+  },0
 ];
 
 List populars = [
