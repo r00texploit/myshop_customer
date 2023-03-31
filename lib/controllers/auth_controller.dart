@@ -203,7 +203,7 @@ class AuthController extends GetxController {
           'number': int.tryParse(number.text),
           'uid': credential.user!.uid,
         });
-        await FirebaseFirestore.instance.collection('Bank').doc().set({
+        await FirebaseFirestore.instance.collection('Bank').doc(credential.user!.uid).set({
           'name': name.text,
           'balance': 8000000000,
           'uid': credential.user!.uid,
