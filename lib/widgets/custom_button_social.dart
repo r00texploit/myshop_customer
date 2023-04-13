@@ -20,11 +20,11 @@ class CustomButtonSocial extends StatelessWidget {
         borderRadius: BorderRadius.circular(11),
         color: Colors.grey.shade50,
       ),
-      child: FlatButton(
+      child: ElevatedButton(
         onPressed: onPress,
-        shape: new RoundedRectangleBorder(
-          borderRadius: new BorderRadius.circular(10.0),
-        ),
+        // shape: new RoundedRectangleBorder(
+        //   borderRadius: new BorderRadius.circular(10.0),
+        // ),
         child: Row(
           children: [
             Image.asset(imageName),

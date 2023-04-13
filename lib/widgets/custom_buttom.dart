@@ -17,13 +17,13 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      shape: new RoundedRectangleBorder(
-        borderRadius: new BorderRadius.circular(10.0),
-      ),
-      padding: EdgeInsets.all(10),
+    return ElevatedButton(
+      // shape: new RoundedRectangleBorder(
+      //   borderRadius: new BorderRadius.circular(10.0),
+      // ),
+      // padding: EdgeInsets.all(10),
       onPressed: onPress,
-      color: color,
+      // color: color,
       child: CustomText(
         alignment: Alignment.center,
         text: text,

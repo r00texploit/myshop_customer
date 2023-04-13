@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 20,
           ),
-          getCollections(),
+          // getCollections(),
           SizedBox(
             height: 20,
           ),
@@ -121,50 +121,50 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 20,
           ),
-          // Container(
-          //   margin: EdgeInsets.only(left: 15, right: 15, bottom: 10, top: 10),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       Text(
-          //         "New",
-          //         style: TextStyle(
-          //             fontSize: 22,
-          //             fontWeight: FontWeight.w600,
-          //             color: textColor),
-          //       ),
-          //       // Text(
-          //       //   "See all",
-          //       //   style: TextStyle(fontSize: 14, color: darker),
-          //       // ),
-          //     ],
-          //   ),
-          // ),
-          // getNewItems(),
+          Container(
+            margin: EdgeInsets.only(left: 15, right: 15, bottom: 10, top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "New",
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: textColor),
+                ),
+                // Text(
+                //   "See all",
+                //   style: TextStyle(fontSize: 14, color: darker),
+                // ),
+              ],
+            ),
+          ),
+          getNewItems(),
         ]),
       ),
     );
   }
 
-  getCollections() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(10),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-          children: List.generate(
-              collections.length,
-              (index) => Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                      onTap: () {
-                        controller
-                            .getProductByGender(collections[index]['title']);
-                        Get.to(() =>
-                            GenderPage(title: collections[index]['title']));
-                      },
-                      child: CollectionBox(data: collections[index]))))),
-    );
-  }
+  // getCollections() {
+  //   return SingleChildScrollView(
+  //     padding: EdgeInsets.all(10),
+  //     scrollDirection: Axis.horizontal,
+  //     child: Row(
+  //         children: List.generate(
+  //             collections.length,
+  //             (index) => Padding(
+  //                 padding: const EdgeInsets.only(right: 10),
+  //                 child: GestureDetector(
+  //                     onTap: () {
+  //                       controller
+  //                           .getProductByGender(collections[index]['title']);
+  //                       Get.to(() =>
+  //                           GenderPage(title: collections[index]['title']));
+  //                     },
+  //                     child: CollectionBox(data: collections[index]))))),
+  //   );
+  // }
 
   getPopulars() {
     return Obx(() {
